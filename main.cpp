@@ -4,10 +4,21 @@
 #include <vector>
 
 int toBase27(std::string trigram);
+std::vector<std::string> pullTrigramsFromSequence(std::string sequence);
 
 int main(int argc, char *argv[]) {
-  //Value should be 6094 (it is)
-  std::cout << toBase27("his") << std::endl;
+  std::vector<std::string>vectorOfTrigrams = pullTrigramsFromSequence(argv[1]);
+  for (std::vector<std::string>::const_iterator i = vectorOfTrigrams.begin(); i != vectorOfTrigrams.end(); ++i)
+    std::cout << *i << std::endl;
+  //Initialize frequencyVector
+  std::vector<int>frequencyVector;
+  for(int i=0;i<19683;i++){
+    frequencyVector.push_back(0);
+  }
+  for(int i=0;i<vectorOfTrigrams.size();i++)
+    frequencyVector[toBase27(vectorOfTrigrams[i])] += 1;
+  for(int i=0;i<frequencyVector.size();i++)
+    std::cout << frequencyVector[i] << std::endl;
   return 0;
 }
 
@@ -23,4 +34,17 @@ int toBase27(std::string trigram){
       trigram[i] = '`';
 }
   return (((int)trigram[0]-96)*729)+(((int)trigram[1]-96)*27)+(int)trigram[2]-96;
+}
+
+std::vector<std::string> pullTrigramsFromSequence(std::string sequence){
+  std::vector<std::string> trigramVector;
+  int seqlen = sequence.length();
+  for(int i=2;i<seqlen;i++){
+    std::string currentTrigram = "";
+    currentTrigram += sequence[i-2];
+    currentTrigram += sequence[i-1];
+    currentTrigram += sequence[i];
+    trigramVector.push_back(currentTrigram);
+  }
+	return trigramVector;
 }
