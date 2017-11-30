@@ -1,0 +1,25 @@
+commit 1d7e741e076b3e6f4646b2d126a3a21d0a6cc686
+Author: Unknown <matthew_mayers@my.uri.edu>
+Date:   Wed Nov 29 23:45:35 2017 -0500
+
+    Removed Debug Code/Outputs Now Fit Requirement
+
+commit 538d41765ff2639600885389f5cb958ae8404a6e
+Author: Unknown <matthew_mayers@my.uri.edu>
+Date:   Tue Nov 28 23:43:34 2017 -0500
+
+    Semi-Complete/Optimization&Clarification Needed
+    
+    Functions how we think it should, but want to make sure that it follows the guidelines of the assignment by the next commit.
+
+commit 132f3e4a7233c953d5a4dcd99276afefbe9d883f
+Author: Unknown <matthew_mayers@my.uri.edu>
+Date:   Tue Nov 28 22:18:51 2017 -0500
+
+    toBase27 Functioning
+
+commit 4362d2e7bcda6151e922be46e9578574ed3e4f72
+Author: Unknown <matthew_mayers@my.uri.edu>
+Date:   Tue Nov 28 22:11:05 2017 -0500
+
+    Initial commit
