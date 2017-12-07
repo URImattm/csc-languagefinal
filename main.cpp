@@ -16,11 +16,18 @@ int main(int argc, char *argv[]){
   std::string testFileDir = argv[argc-1];
   std::string testSequence;
   std::ifstream infile;
+  std::string closestMatchName = "None.";
+  double closestMatchValue = 0.0;
   infile.open(testFileDir.c_str());
   std::getline(infile,testSequence);
   infile.close();
-  std::vector<int> testVector = toFreqVector(testFileDir);
-  std::cout << findCosineSimilarity(toFreqVector(testFileDir),toFreqVector(argv[1]));
+  for(int i = 1;i<(argc-1);i++){
+    if(findCosineSimilarity(toFreqVector(testFileDir),toFreqVector(argv[i]))>closestMatchValue){
+      closestMatchValue = findCosineSimilarity(toFreqVector(testFileDir),toFreqVector(argv[i]));
+      closestMatchName = argv[i];
+    }
+  }
+  std::cout << closestMatchName << std::endl;
   return 0;
   }
 
@@ -28,10 +35,10 @@ int main(int argc, char *argv[]){
       double upper = 0.0;
       double lower_a = 0.0;
       double lower_b = 0.0;
-       for(int i = 0; i < (int)originalSequence.size(); ++i) {
-          upper += originalSequence[i] * possibleSequence[i];
-          lower_a += originalSequence[i] * possibleSequence[i];
-          lower_b += originalSequence[i] * possibleSequence[i];
+      for(int i = 0; i < (int)originalSequence.size(); i++) {
+        upper += originalSequence[i] * possibleSequence[i];
+        lower_a += originalSequence[i] * originalSequence[i];
+        lower_b += possibleSequence[i] * possibleSequence[i];
       }
       return (upper / (sqrt(lower_a) * sqrt(lower_b)));
   }
