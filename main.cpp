@@ -1,29 +1,55 @@
-//Author: Matthew Mayers
+//Author: Matthew Mayers/Julio Molina
 
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <sstream>
 #include <vector>
+#include <math.h>
 
 int toBase27(std::string trigram);
 std::vector<std::string> pullTrigramsFromSequence(std::string sequence);
+std::vector<int> toFreqVector(std::string fileDir);
+double findCosineSimilarity(std::vector <int> originalSequence, std::vector <int> possibleSequence);
 
-//Creates two vectors, one is
+int main(int argc, char *argv[]){
+  std::string testFileDir = argv[argc-1];
+  std::string testSequence;
+  std::ifstream infile;
+  infile.open(testFileDir.c_str());
+  std::getline(infile,testSequence);
+  infile.close();
+  std::vector<int> testVector = toFreqVector(testFileDir);
+  std::cout << findCosineSimilarity(toFreqVector(testFileDir),toFreqVector(argv[1]));
+  return 0;
+  }
 
-int main(int argc, char *argv[]) {
-  if(argc != 2)
-    return 1;
-  std::vector<std::string>vectorOfTrigrams = pullTrigramsFromSequence(argv[1]);
+  double findCosineSimilarity(std::vector <int> originalSequence, std::vector <int> possibleSequence){
+      double upper = 0.0;
+      double lower_a = 0.0;
+      double lower_b = 0.0;
+       for(int i = 0; i < (int)originalSequence.size(); ++i) {
+          upper += originalSequence[i] * possibleSequence[i];
+          lower_a += originalSequence[i] * possibleSequence[i];
+          lower_b += originalSequence[i] * possibleSequence[i];
+      }
+      return (upper / (sqrt(lower_a) * sqrt(lower_b)));
+  }
+
+std::vector<int> toFreqVector(std::string fileDir) {
+  std::string fileSequence;
+  std::ifstream infile;
+  infile.open(fileDir.c_str());
+  std::getline(infile,fileSequence);
+  infile.close();
+  std::vector<std::string>vectorOfTrigrams = pullTrigramsFromSequence(fileSequence);
   std::vector<int>frequencyVector;
   for(int i=0;i<19683;i++){
     frequencyVector.push_back(0);
   }
   for(int i=0;i<(int)vectorOfTrigrams.size();i++)
     frequencyVector[toBase27(vectorOfTrigrams[i])] += 1;
-  for(int i=0;i<(int)frequencyVector.size();i++)
-    std::cout << frequencyVector[i] << " ";
-  std::cout << std::endl;
-  return 0;
+  return frequencyVector;
 }
 
 //Takes a trigram string and outputs its corresponding base27 value
