@@ -8,7 +8,7 @@
 #include <math.h>
 
 int toBase27(std::string trigram);
-std::vector<std::string> pullTrigramsFromSequence(std::string sequence);
+std::vector<int> pullFrequenciesFromSequence(std::string sequence);
 std::vector<int> toFreqVector(std::string fileDir);
 double findCosineSimilarity(std::vector <int> originalSequence, std::vector <int> possibleSequence);
 
@@ -21,9 +21,10 @@ int main(int argc, char *argv[]){
   infile.open(testFileDir.c_str());
   std::getline(infile,testSequence);
   infile.close();
+  std::vector<int> testVector = pullFrequenciesFromSequence(testFileDir);
   for(int i = 1;i<(argc-1);i++){
-    if(findCosineSimilarity(toFreqVector(testFileDir),toFreqVector(argv[i]))>closestMatchValue){
-      closestMatchValue = findCosineSimilarity(toFreqVector(testFileDir),toFreqVector(argv[i]));
+    if(findCosineSimilarity(pullFrequenciesFromSequence(testFileDir),pullFrequenciesFromSequence(argv[i]))>closestMatchValue){
+      closestMatchValue = findCosineSimilarity(pullFrequenciesFromSequence(testFileDir),pullFrequenciesFromSequence(argv[i]));
       closestMatchName = argv[i];
     }
   }
@@ -43,22 +44,6 @@ int main(int argc, char *argv[]){
       return (upper / (sqrt(lower_a) * sqrt(lower_b)));
   }
 
-std::vector<int> toFreqVector(std::string fileDir) {
-  std::string fileSequence;
-  std::ifstream infile;
-  infile.open(fileDir.c_str());
-  std::getline(infile,fileSequence);
-  infile.close();
-  std::vector<std::string>vectorOfTrigrams = pullTrigramsFromSequence(fileSequence);
-  std::vector<int>frequencyVector;
-  for(int i=0;i<19683;i++){
-    frequencyVector.push_back(0);
-  }
-  for(int i=0;i<(int)vectorOfTrigrams.size();i++)
-    frequencyVector[toBase27(vectorOfTrigrams[i])] += 1;
-  return frequencyVector;
-}
-
 //Takes a trigram string and outputs its corresponding base27 value
 //Subtract by 96 (would be 97 but reduced by 1 to account for spaces) in order to change ascii decimal value to specified format
 int toBase27(std::string trigram){
@@ -75,15 +60,24 @@ int toBase27(std::string trigram){
 }
 
 //Loops through the raw sequence and gets the trigram frequencies from a string
-std::vector<std::string> pullTrigramsFromSequence(std::string sequence){
+std::vector<int> pullFrequenciesFromSequence(std::string fileDir){
+  std::string fileSequence;
+  std::ifstream infile;
+  infile.open(fileDir.c_str());
+  std::getline(infile,fileSequence);
+  infile.close();
   std::vector<std::string> trigramVector;
-  int seqlen = sequence.length();
+  int seqlen = fileSequence.length();
+  std::vector<int>frequencyVector;
+  for(int i=0;i<19683;i++){
+    frequencyVector.push_back(0);
+  }
   for(int i=2;i<seqlen;i++){
     std::string currentTrigram = "";
-    currentTrigram += sequence[i-2];
-    currentTrigram += sequence[i-1];
-    currentTrigram += sequence[i];
-    trigramVector.push_back(currentTrigram);
+    currentTrigram += fileSequence[i-2];
+    currentTrigram += fileSequence[i-1];
+    currentTrigram += fileSequence[i];
+    frequencyVector[toBase27(currentTrigram)] += 1;
   }
-	return trigramVector;
+	return frequencyVector;
 }
